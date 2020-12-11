@@ -46,7 +46,6 @@ abstract class Users with ChangeNotifier, ConnectionProvider {
         }),
         retryIf: (e) => e is SocketException || e is TimeoutException,
       );
-      // print('response body raw ${response.body}');
       final Map<String, dynamic> decodedData = jsonDecode(response.body);
       if (decodedData.containsKey('data')) {
         final users = decodedData['data'];
@@ -56,6 +55,7 @@ abstract class Users with ChangeNotifier, ConnectionProvider {
         var _tempUser;
         users.forEach((item) {
           var serialized = UserModel.fromJson(item);
+
           //  build users
           _tempUser = UserModel(
             id: serialized.id,
@@ -72,9 +72,8 @@ abstract class Users with ChangeNotifier, ConnectionProvider {
 
         // append users to existing list
         if (loadMore && _currentPage <= _totalPages) {
-          print('user length ${_userList.length}');
           _userList.addAll(_tempUserList);
-          print('user length2  ${_userList.length}');
+
           // increase _current page if its not the last page
           _currentPage++;
           _fetchingUsers = false;
@@ -83,7 +82,7 @@ abstract class Users with ChangeNotifier, ConnectionProvider {
         }
 
         _userList = _tempUserList;
-        print('user length3  ${_userList.length}');
+
         //  increase _currentPage if users is not empty and if its not the last page.
         if (users.length > 1) {
           _currentPage++;
